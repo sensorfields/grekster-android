@@ -9,17 +9,22 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import com.spotify.mobius.Connection;
-import com.spotify.mobius.Mobius;
 import com.spotify.mobius.MobiusLoop;
 import com.spotify.mobius.Next;
-import com.spotify.mobius.functions.Consumer;
+import com.spotify.mobius.rx2.RxMobius;
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import timber.log.Timber;
 
 public final class Activity extends AppCompatActivity {
 
-  MobiusLoop<Model, Event, Effect> loop =
-      Mobius.loop(Activity::update, Activity::effectHandler).startFrom(Model.create(3));
+  static ObservableTransformer<Effect, Event> effectHandler =
+      RxMobius.<Effect, Event>subtypeEffectHandler()
+          .add(Effect.ReportErrorNegative.class, Activity::reportErrorNegativeHandler)
+          .build();
+
+  private final MobiusLoop<Model, Event, Effect> loop =
+      RxMobius.loop(Activity::update, Activity.effectHandler).startFrom(Model.create(3));
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,17 +58,10 @@ public final class Activity extends AppCompatActivity {
         });
   }
 
-  static Connection<Effect> effectHandler(Consumer<Event> eventConsumer) {
-    return new Connection<Effect>() {
-      @Override
-      public void accept(@NonNull Effect effect) {
-        effect.match(reportErrorNegative -> Timber.e("NEGATIVE YO YO"));
-      }
-
-      @Override
-      public void dispose() {
-        Timber.e("EFFECT HANDLER DISPOSE");
-      }
-    };
+  static Observable<Event> reportErrorNegativeHandler(
+      Observable<Effect.ReportErrorNegative> effects) {
+    return effects
+        .doOnNext(effect -> Timber.e("NEGATIVE YO YO"))
+        .switchMap(effect -> Observable.empty());
   }
 }
