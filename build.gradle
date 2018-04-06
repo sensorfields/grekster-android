@@ -16,6 +16,7 @@ ext {
     guavaVersion = '24.1-android'
     rxjavaVersion = '2.1.12'
     rxandroidVersion = '2.0.2'
+    rxbindingVersion = '2.1.1'
     mobiusVersion = '1.1.1'
     autoValueVersion = '1.6'
     dataenumVersion = '1.1.0'
@@ -55,10 +56,12 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:${rxjavaVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
+    implementation "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}"
 
     implementation "com.spotify.mobius:mobius-core:${mobiusVersion}"
     implementation "com.spotify.mobius:mobius-extras:${mobiusVersion}"
     implementation "com.spotify.mobius:mobius-rx2:${mobiusVersion}"
+    implementation "com.spotify.mobius:mobius-android:${mobiusVersion}"
 
     implementation "com.google.auto.value:auto-value-annotations:${autoValueVersion}"
     annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"

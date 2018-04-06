@@ -7,6 +7,10 @@ public abstract class Model {
 
   public abstract int counter();
 
+  public static Model initial() {
+    return create(3);
+  }
+
   public Model increase() {
     return create(counter() + 1);
   }
@@ -15,7 +19,7 @@ public abstract class Model {
     return create(counter() - 1);
   }
 
-  public static Model create(int counter) {
+  private static Model create(int counter) {
     return new AutoValue_Model(counter);
   }
 }
