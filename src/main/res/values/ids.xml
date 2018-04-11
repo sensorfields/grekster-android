@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- General -->
+  <item name="content" type="id"/>
+
+  <!-- Grek List-->
+  <item name="grekList" type="id"/>
+
+</resources>
