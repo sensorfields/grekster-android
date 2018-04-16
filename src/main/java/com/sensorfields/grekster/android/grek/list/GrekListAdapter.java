@@ -3,6 +3,7 @@ package com.sensorfields.grekster.android.grek.list;
 import static com.jakewharton.rxbinding2.view.RxView.clicks;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -21,8 +22,8 @@ final class GrekListAdapter extends Adapter<GrekViewHolder> {
 
   private ImmutableList<String> greks = ImmutableList.of();
 
-  public void setGreks(ImmutableList<String> greks) {
-    this.greks = greks;
+  public void setGreks(@Nullable ImmutableList<String> greks) {
+    this.greks = greks == null ? ImmutableList.of() : greks;
     notifyDataSetChanged();
   }
 

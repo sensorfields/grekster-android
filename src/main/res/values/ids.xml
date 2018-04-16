@@ -5,6 +5,7 @@
   <item name="content" type="id"/>
 
   <!-- Grek List-->
+  <item name="grekListSwipeRefresh" type="id"/>
   <item name="grekList" type="id"/>
 
 </resources>

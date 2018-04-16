@@ -12,6 +12,7 @@ apply plugin: 'com.android.application'
 
 ext {
     androidSupportLibraryVersion = '27.1.1'
+    androidArchLifecycleVersion = '1.1.1'
     timberVersion = '4.7.0'
     guavaVersion = '24.1-android'
     rxjavaVersion = '2.1.12'
@@ -20,6 +21,8 @@ ext {
     mobiusVersion = '1.1.1'
     autoValueVersion = '1.6'
     dataenumVersion = '1.1.0'
+
+    junitVersion = '4.12'
 }
 
 android {
@@ -50,6 +53,10 @@ dependencies {
     implementation "com.android.support:support-core-ui:${androidSupportLibraryVersion}"
     implementation "com.android.support:appcompat-v7:${androidSupportLibraryVersion}"
     implementation "com.android.support:design:${androidSupportLibraryVersion}"
+    implementation "com.android.support:design:${androidSupportLibraryVersion}"
+
+    implementation "android.arch.lifecycle:viewmodel:${androidArchLifecycleVersion}"
+    implementation "android.arch.lifecycle:extensions:${androidArchLifecycleVersion}"
 
     implementation "com.jakewharton.timber:timber:${timberVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
@@ -57,6 +64,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:${rxjavaVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:${rxbindingVersion}"
 
     implementation "com.spotify.mobius:mobius-core:${mobiusVersion}"
     implementation "com.spotify.mobius:mobius-extras:${mobiusVersion}"
@@ -68,4 +76,7 @@ dependencies {
     implementation "com.spotify.dataenum:dataenum:${dataenumVersion}"
     annotationProcessor "com.spotify.dataenum:dataenum-processor:${dataenumVersion}"
     compileOnly 'javax.annotation:jsr250-api:1.0'
+
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "com.spotify.mobius:mobius-test:${mobiusVersion}"
 }
