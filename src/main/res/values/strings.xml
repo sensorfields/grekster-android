@@ -3,6 +3,5 @@
 
   <!-- Grek List-->
   <string name="grek_list_title">List</string>
-  <string name="grek_list_item_click_message">Clicked on %1$s!</string>
 
 </resources>
