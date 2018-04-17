@@ -2,6 +2,7 @@ package com.sensorfields.grekster.android.grek.list;
 
 import static com.sensorfields.grekster.android.grek.list.Effect.loadGreks;
 import static com.spotify.mobius.Effects.effects;
+import static com.spotify.mobius.First.first;
 import static com.spotify.mobius.Next.next;
 import static com.spotify.mobius.Next.noChange;
 import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
@@ -45,8 +46,8 @@ public final class GrekListViewModel extends ViewModel {
     controller.disconnect();
   }
 
-  private static First<Model, Effect> init(Model model) {
-    return First.first(model, effects(loadGreks()));
+  static First<Model, Effect> init(Model model) {
+    return first(model.toBuilder().activity(true).build(), effects(loadGreks()));
   }
 
   @NonNull
