@@ -9,12 +9,15 @@ import static com.spotify.mobius.Next.next;
 import static com.spotify.mobius.Next.noChange;
 import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
 
-import android.arch.lifecycle.ViewModel;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
+import com.sensorfields.grekster.android.grek.details.GrekDetailsFragment;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
+import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop;
 import com.spotify.mobius.MobiusLoop.Controller;
@@ -23,26 +26,30 @@ import com.spotify.mobius.android.AndroidLogger;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
-import timber.log.Timber;
 
-public final class GrekListViewModel extends ViewModel {
+public final class GrekListViewModel extends AndroidViewModel {
 
-  private final MobiusLoop.Factory<Model, Event, Effect> factory =
-      RxMobius.loop(
-              GrekListViewModel::update,
-              RxMobius.<Effect, Event>subtypeEffectHandler()
-                  .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
-                  .add(ShowGrekDetails.class, GrekListViewModel::showGrekDetailsHandler)
-                  .build())
-          .init(GrekListViewModel::init)
-          .logger(AndroidLogger.tag("Grek"));
+  private final Controller<Model, Event> controller;
 
-  private final Controller<Model, Event> controller =
-      MobiusAndroid.controller(factory, Model.initial());
-
-  public GrekListViewModel() {}
+  public GrekListViewModel(@NonNull Application application) {
+    super(application);
+    FragmentManagerProvider fragmentManagerProvider =
+        com.sensorfields.grekster.android.Application.component(application)
+            .fragmentManagerProvider();
+    MobiusLoop.Factory<Model, Event, Effect> factory =
+        RxMobius.loop(
+                GrekListViewModel::update,
+                RxMobius.<Effect, Event>subtypeEffectHandler()
+                    .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
+                    .add(ShowGrekDetails.class, new ShowGrekDetailsHandler(fragmentManagerProvider))
+                    .build())
+            .init(GrekListViewModel::init)
+            .logger(AndroidLogger.tag("Grek"));
+    controller = MobiusAndroid.controller(factory, Model.initial());
+  }
 
   void start(ObservableTransformer<Model, Event> view) {
     controller.connect(fromTransformer(view));
@@ -93,14 +100,6 @@ public final class GrekListViewModel extends ViewModel {
                 .onErrorReturn(Event::greksLoadingFailed));
   }
 
-  private static Observable<Event> showGrekDetailsHandler(Observable<ShowGrekDetails> effects) {
-    return effects.flatMap(
-        effect -> {
-          Timber.d("Nagivate to %s", effect.grek());
-          return Observable.empty();
-        });
-  }
-
   private static final ImmutableList<String> GREKS =
       ImmutableList.<String>builder()
           .add("Cool grek here")
@@ -109,4 +108,30 @@ public final class GrekListViewModel extends ViewModel {
           .add("#grek #audiobooks #teacher")
           .add("stop it plz")
           .build();
+
+  static final class ShowGrekDetailsHandler
+      implements ObservableTransformer<ShowGrekDetails, Event> {
+
+    private final FragmentManagerProvider fragmentManagerProvider;
+
+    ShowGrekDetailsHandler(FragmentManagerProvider fragmentManagerProvider) {
+      this.fragmentManagerProvider = fragmentManagerProvider;
+    }
+
+    @Override
+    public ObservableSource<Event> apply(Observable<ShowGrekDetails> upstream) {
+      return upstream.flatMap(
+          effect -> {
+            fragmentManagerProvider
+                .fragmentManager()
+                .beginTransaction()
+                .replace(
+                    fragmentManagerProvider.containerViewId(),
+                    GrekDetailsFragment.create(effect.grek()))
+                .addToBackStack(null)
+                .commit();
+            return Observable.empty();
+          });
+    }
+  }
 }

@@ -1,21 +1,26 @@
 package com.sensorfields.grekster.android;
 
+import static com.sensorfields.grekster.android.Application.component;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import com.sensorfields.grekster.android.grek.list.GrekListFragment;
+import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
 
 public final class Activity extends AppCompatActivity {
-
-  private static final int CONTAINER_VIEW_ID = android.R.id.content;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getSupportFragmentManager().findFragmentById(CONTAINER_VIEW_ID) == null) {
-      getSupportFragmentManager()
+    FragmentManagerProvider fragmentManagerProvider = component(this).fragmentManagerProvider();
+    fragmentManagerProvider.fragmentManager(getSupportFragmentManager());
+    FragmentManager fragmentManager = fragmentManagerProvider.fragmentManager();
+    if (fragmentManager.findFragmentById(fragmentManagerProvider.containerViewId()) == null) {
+      fragmentManager
           .beginTransaction()
-          .add(CONTAINER_VIEW_ID, GrekListFragment.create())
+          .add(fragmentManagerProvider.containerViewId(), GrekListFragment.create())
           .commit();
     }
   }
