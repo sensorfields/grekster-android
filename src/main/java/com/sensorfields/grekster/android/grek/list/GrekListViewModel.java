@@ -62,7 +62,8 @@ public final class GrekListViewModel extends ViewModel {
         greksLoaded -> next(model.toBuilder().activity(false).greks(greksLoaded.greks()).build()),
         greksLoadingFailed ->
             next(model.toBuilder().activity(false).error(greksLoadingFailed.error()).build()),
-        swipeRefreshTriggered -> noChange(),
+        swipeRefreshTriggered ->
+            next(model.toBuilder().activity(true).build(), effects(loadGreks())),
         grekClicked -> noChange());
   }
 

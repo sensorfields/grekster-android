@@ -1,8 +1,11 @@
 package com.sensorfields.grekster.android.grek.list;
 
+import static com.sensorfields.grekster.android.grek.list.Effect.loadGreks;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoaded;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoadingFailed;
+import static com.sensorfields.grekster.android.grek.list.Event.swipeRefreshTriggered;
 import static com.sensorfields.grekster.android.grek.list.GrekListViewModel.update;
+import static com.spotify.mobius.test.NextMatchers.hasEffects;
 import static com.spotify.mobius.test.NextMatchers.hasModel;
 import static com.spotify.mobius.test.NextMatchers.hasNoEffects;
 import static org.junit.Assert.assertThat;
@@ -33,5 +36,17 @@ public final class UpdateTest {
 
     assertThat(next, hasModel(model.toBuilder().activity(false).error(error).build()));
     assertThat(next, hasNoEffects());
+  }
+
+  @Test
+  public void
+      modelActivityFalse_eventSwipeRefreshTriggered_returns_modelAvtivityTrue_effectLoadGreks() {
+    ImmutableList<String> greks = ImmutableList.of("One", "Two", "Three");
+    Model model = Model.initial().toBuilder().greks(greks).build();
+
+    Next<Model, Effect> next = update(model, swipeRefreshTriggered());
+
+    assertThat(next, hasModel(model.toBuilder().activity(true).build()));
+    assertThat(next, hasEffects(loadGreks()));
   }
 }
