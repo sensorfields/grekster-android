@@ -9,13 +9,12 @@ import static com.spotify.mobius.Next.next;
 import static com.spotify.mobius.Next.noChange;
 import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.os.SystemClock;
+import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
+import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop;
@@ -24,25 +23,21 @@ import com.spotify.mobius.Next;
 import com.spotify.mobius.android.AndroidLogger;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
-import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.Single;
+import javax.inject.Inject;
 
-public final class GrekListViewModel extends AndroidViewModel {
+public final class GrekListViewModel extends ViewModel {
 
   private final Controller<Model, Event> controller;
 
-  public GrekListViewModel(@NonNull Application application) {
-    super(application);
-    ShowGrekDetailsHandler showGrekDetailsHandler =
-        com.sensorfields.grekster.android.Application.component(application)
-            .showGrekDetailsHandler();
-
+  @Inject
+  GrekListViewModel(
+      LoadGreksHandler loadGreksHandler, ShowGrekDetailsHandler showGrekDetailsHandler) {
     MobiusLoop.Factory<Model, Event, Effect> factory =
         RxMobius.loop(
                 GrekListViewModel::update,
                 RxMobius.<Effect, Event>subtypeEffectHandler()
-                    .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
+                    .add(LoadGreks.class, loadGreksHandler)
                     .add(ShowGrekDetails.class, showGrekDetailsHandler)
                     .build())
             .init(GrekListViewModel::init)
@@ -85,26 +80,4 @@ public final class GrekListViewModel extends AndroidViewModel {
           return noChange();
         });
   }
-
-  private static Observable<Event> loadGreksHandler(Observable<LoadGreks> effects) {
-    return effects.flatMap(
-        effect ->
-            Single.fromCallable(
-                    () -> {
-                      SystemClock.sleep(700);
-                      return GREKS;
-                    })
-                .toObservable()
-                .map(Event::greksLoaded)
-                .onErrorReturn(Event::greksLoadingFailed));
-  }
-
-  private static final ImmutableList<String> GREKS =
-      ImmutableList.<String>builder()
-          .add("Cool grek here")
-          .add("#GREK")
-          .add("#GREK is way beyond yo")
-          .add("#grek #audiobooks #teacher")
-          .add("stop it plz")
-          .build();
 }

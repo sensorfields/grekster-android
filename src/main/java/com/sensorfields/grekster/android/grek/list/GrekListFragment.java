@@ -1,6 +1,7 @@
 package com.sensorfields.grekster.android.grek.list;
 
 import static com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout.refreshes;
+import static com.sensorfields.grekster.android.Application.viewModelFactory;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -54,7 +55,8 @@ public final class GrekListFragment extends Fragment {
     listView.setLayoutManager(new LinearLayoutManager(getContext()));
     listView.setAdapter(listAdapter = new GrekListAdapter());
 
-    viewModel = ViewModelProviders.of(this).get(GrekListViewModel.class);
+    viewModel =
+        ViewModelProviders.of(this, viewModelFactory(getContext())).get(GrekListViewModel.class);
     viewModel.start(this::connectViews);
 
     return view;

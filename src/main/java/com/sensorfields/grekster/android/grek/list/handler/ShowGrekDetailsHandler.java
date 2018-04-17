@@ -8,9 +8,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
 public final class ShowGrekDetailsHandler implements ObservableTransformer<ShowGrekDetails, Event> {
 
   private final FragmentManagerProvider fragmentManagerProvider;
