@@ -2,7 +2,9 @@ package com.sensorfields.grekster.android;
 
 import android.content.Context;
 import android.os.StrictMode;
+import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
+import javax.inject.Singleton;
 import timber.log.Timber;
 
 public final class Application extends android.app.Application {
@@ -12,7 +14,7 @@ public final class Application extends android.app.Application {
     setupStrictMode();
     super.onCreate();
     setupTimber();
-    setupDi();
+    setupDagger();
   }
 
   // StrictMode
@@ -31,27 +33,24 @@ public final class Application extends android.app.Application {
     }
   }
 
-  // DI
+  // Dagger
 
   private Component component;
 
-  private void setupDi() {
-    component = new Component();
+  private void setupDagger() {
+    component = DaggerApplication_Component.create();
   }
 
   public static Component component(Context context) {
     return ((Application) context.getApplicationContext()).component;
   }
 
-  public final class Component {
+  @Singleton
+  @dagger.Component
+  public interface Component {
 
-    private FragmentManagerProvider fragmentManagerProvider;
+    FragmentManagerProvider fragmentManagerProvider();
 
-    public FragmentManagerProvider fragmentManagerProvider() {
-      if (fragmentManagerProvider == null) {
-        fragmentManagerProvider = new FragmentManagerProvider();
-      }
-      return fragmentManagerProvider;
-    }
+    ShowGrekDetailsHandler showGrekDetailsHandler();
   }
 }

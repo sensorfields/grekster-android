@@ -14,10 +14,9 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
-import com.sensorfields.grekster.android.grek.details.GrekDetailsFragment;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
-import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
+import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop;
 import com.spotify.mobius.MobiusLoop.Controller;
@@ -26,7 +25,6 @@ import com.spotify.mobius.android.AndroidLogger;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
 
@@ -36,15 +34,16 @@ public final class GrekListViewModel extends AndroidViewModel {
 
   public GrekListViewModel(@NonNull Application application) {
     super(application);
-    FragmentManagerProvider fragmentManagerProvider =
+    ShowGrekDetailsHandler showGrekDetailsHandler =
         com.sensorfields.grekster.android.Application.component(application)
-            .fragmentManagerProvider();
+            .showGrekDetailsHandler();
+
     MobiusLoop.Factory<Model, Event, Effect> factory =
         RxMobius.loop(
                 GrekListViewModel::update,
                 RxMobius.<Effect, Event>subtypeEffectHandler()
                     .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
-                    .add(ShowGrekDetails.class, new ShowGrekDetailsHandler(fragmentManagerProvider))
+                    .add(ShowGrekDetails.class, showGrekDetailsHandler)
                     .build())
             .init(GrekListViewModel::init)
             .logger(AndroidLogger.tag("Grek"));
@@ -108,30 +107,4 @@ public final class GrekListViewModel extends AndroidViewModel {
           .add("#grek #audiobooks #teacher")
           .add("stop it plz")
           .build();
-
-  static final class ShowGrekDetailsHandler
-      implements ObservableTransformer<ShowGrekDetails, Event> {
-
-    private final FragmentManagerProvider fragmentManagerProvider;
-
-    ShowGrekDetailsHandler(FragmentManagerProvider fragmentManagerProvider) {
-      this.fragmentManagerProvider = fragmentManagerProvider;
-    }
-
-    @Override
-    public ObservableSource<Event> apply(Observable<ShowGrekDetails> upstream) {
-      return upstream.flatMap(
-          effect -> {
-            fragmentManagerProvider
-                .fragmentManager()
-                .beginTransaction()
-                .replace(
-                    fragmentManagerProvider.containerViewId(),
-                    GrekDetailsFragment.create(effect.grek()))
-                .addToBackStack(null)
-                .commit();
-            return Observable.empty();
-          });
-    }
-  }
 }
