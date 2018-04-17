@@ -1,6 +1,8 @@
 package com.sensorfields.grekster.android.grek.list;
 
 import static com.sensorfields.grekster.android.grek.list.Effect.loadGreks;
+import static com.sensorfields.grekster.android.grek.list.Effect.showGrekDetails;
+import static com.sensorfields.grekster.android.grek.list.Event.grekClicked;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoaded;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoadingFailed;
 import static com.sensorfields.grekster.android.grek.list.Event.swipeRefreshTriggered;
@@ -8,6 +10,7 @@ import static com.sensorfields.grekster.android.grek.list.GrekListViewModel.upda
 import static com.spotify.mobius.test.NextMatchers.hasEffects;
 import static com.spotify.mobius.test.NextMatchers.hasModel;
 import static com.spotify.mobius.test.NextMatchers.hasNoEffects;
+import static com.spotify.mobius.test.NextMatchers.hasNoModel;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableList;
@@ -17,7 +20,7 @@ import org.junit.Test;
 public final class UpdateTest {
 
   @Test
-  public void modelActivityTrue_eventGreksLoaded_returns_modelActivityFalseAndGreks() {
+  public void greksLoadedEventReturnsModelWithActivityFalseAndGreks() {
     Model model = Model.initial().toBuilder().activity(true).build();
     ImmutableList<String> greks = ImmutableList.of("One", "Two", "Three");
 
@@ -28,7 +31,7 @@ public final class UpdateTest {
   }
 
   @Test
-  public void modelActivityTrue_eventGreksLoadingFailed_returns_modelActivityFalseAndError() {
+  public void greksLoadingFailedEventReturnsModelWithActivityFalseAndError() {
     Model model = Model.initial().toBuilder().activity(true).build();
     Throwable error = new IllegalArgumentException();
 
@@ -39,8 +42,7 @@ public final class UpdateTest {
   }
 
   @Test
-  public void
-      modelActivityFalse_eventSwipeRefreshTriggered_returns_modelAvtivityTrue_effectLoadGreks() {
+  public void swipeRefreshTriggeredEventReturnsModelWithActivityTrueAndLoadGreksEffect() {
     ImmutableList<String> greks = ImmutableList.of("One", "Two", "Three");
     Model model = Model.initial().toBuilder().greks(greks).build();
 
@@ -48,5 +50,27 @@ public final class UpdateTest {
 
     assertThat(next, hasModel(model.toBuilder().activity(true).build()));
     assertThat(next, hasEffects(loadGreks()));
+  }
+
+  @Test
+  public void grekClickedEventReturnsNoModelAndShowGrekDetailsEffect() {
+    ImmutableList<String> greks = ImmutableList.of("One", "Two", "Three");
+    Model model = Model.initial().toBuilder().greks(greks).build();
+
+    Next<Model, Effect> next = update(model, grekClicked("Two"));
+
+    assertThat(next, hasNoModel());
+    assertThat(next, hasEffects(showGrekDetails("Two")));
+  }
+
+  @Test
+  public void grekClickedEventWithUnknownGrekReturnsNoModelAndNoEffect() {
+    ImmutableList<String> greks = ImmutableList.of("One", "Two", "Three");
+    Model model = Model.initial().toBuilder().greks(greks).build();
+
+    Next<Model, Effect> next = update(model, grekClicked("Four"));
+
+    assertThat(next, hasNoModel());
+    assertThat(next, hasNoEffects());
   }
 }
