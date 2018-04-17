@@ -28,9 +28,15 @@ import timber.log.Timber;
 public final class GrekListViewModel extends ViewModel {
 
   private final MobiusLoop.Factory<Model, Event, Effect> factory =
-      RxMobius.loop(GrekListViewModel::update, EFFECT_HANDLER)
+      RxMobius.loop(
+              GrekListViewModel::update,
+              RxMobius.<Effect, Event>subtypeEffectHandler()
+                  .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
+                  .add(ShowGrekDetails.class, GrekListViewModel::showGrekDetailsHandler)
+                  .build())
           .init(GrekListViewModel::init)
           .logger(AndroidLogger.tag("Grek"));
+
   private final Controller<Model, Event> controller =
       MobiusAndroid.controller(factory, Model.initial());
 
@@ -53,11 +59,11 @@ public final class GrekListViewModel extends ViewModel {
   @NonNull
   static Next<Model, Effect> update(Model model, Event event) {
     return event.map(
-        screenLoaded -> next(model.toBuilder().activity(true).build(), effects(loadGreks())),
+        greksLoaded -> next(model.toBuilder().activity(false).greks(greksLoaded.greks()).build()),
+        greksLoadingFailed ->
+            next(model.toBuilder().activity(false).error(greksLoadingFailed.error()).build()),
         swipeRefreshTriggered -> noChange(),
-        grekClicked -> noChange(),
-        greksLoaded -> noChange(),
-        greksLoadingFailed -> noChange());
+        grekClicked -> noChange());
   }
 
   private static Observable<Event> loadGreksHandler(Observable<LoadGreks> effects) {
@@ -80,12 +86,6 @@ public final class GrekListViewModel extends ViewModel {
           return Observable.empty();
         });
   }
-
-  private static ObservableTransformer<Effect, Event> EFFECT_HANDLER =
-      RxMobius.<Effect, Event>subtypeEffectHandler()
-          .add(LoadGreks.class, GrekListViewModel::loadGreksHandler)
-          .add(ShowGrekDetails.class, GrekListViewModel::showGrekDetailsHandler)
-          .build();
 
   private static final ImmutableList<String> GREKS =
       ImmutableList.<String>builder()
