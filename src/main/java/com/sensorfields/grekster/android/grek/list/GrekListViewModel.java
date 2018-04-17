@@ -53,7 +53,11 @@ public final class GrekListViewModel extends ViewModel {
   }
 
   static First<Model, Effect> init(Model model) {
-    return first(model.toBuilder().activity(true).build(), effects(loadGreks()));
+    if (model.equals(Model.initial())) {
+      return first(model.toBuilder().activity(true).build(), effects(loadGreks()));
+    } else {
+      return first(model);
+    }
   }
 
   @NonNull
