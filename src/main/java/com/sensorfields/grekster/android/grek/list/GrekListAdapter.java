@@ -12,22 +12,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.common.collect.ImmutableList;
 import com.sensorfields.grekster.android.grek.list.GrekListAdapter.GrekViewHolder;
+import com.sensorfields.grekster.android.model.Grek;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 final class GrekListAdapter extends Adapter<GrekViewHolder> {
 
-  private final Subject<String> itemClicksSubject = PublishSubject.create();
+  private final Subject<Grek> itemClicksSubject = PublishSubject.create();
 
-  private ImmutableList<String> greks = ImmutableList.of();
+  private ImmutableList<Grek> greks = ImmutableList.of();
 
-  public void setGreks(@Nullable ImmutableList<String> greks) {
+  public void setGreks(@Nullable ImmutableList<Grek> greks) {
     this.greks = greks == null ? ImmutableList.of() : greks;
     notifyDataSetChanged();
   }
 
-  Observable<String> itemClicks() {
+  Observable<Grek> itemClicks() {
     return itemClicksSubject;
   }
 
@@ -41,7 +42,7 @@ final class GrekListAdapter extends Adapter<GrekViewHolder> {
 
   @Override
   public void onBindViewHolder(@NonNull GrekViewHolder holder, int position) {
-    holder.descriptionView.setText(greks.get(position));
+    holder.descriptionView.setText(greks.get(position).description());
     clicks(holder.itemView)
         .map(ignored -> greks.get(holder.getAdapterPosition()))
         .subscribe(itemClicksSubject);

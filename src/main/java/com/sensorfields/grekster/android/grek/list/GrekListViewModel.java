@@ -16,6 +16,7 @@ import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
 import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
+import com.sensorfields.grekster.android.model.Grek;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop;
@@ -74,8 +75,8 @@ public final class GrekListViewModel extends ViewModel {
         swipeRefreshTriggered ->
             next(model.toBuilder().activity(true).build(), effects(loadGreks())),
         grekClicked -> {
-          String grek = grekClicked.grek();
-          ImmutableList<String> greks = model.greks();
+          Grek grek = grekClicked.grek();
+          ImmutableList<Grek> greks = model.greks();
           if (greks != null && greks.contains(grek)) {
             return dispatch(effects(showGrekDetails(grek)));
           }

@@ -3,6 +3,7 @@ package com.sensorfields.grekster.android.grek.list;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.sensorfields.grekster.android.model.Grek;
 
 @AutoValue
 abstract class Model {
@@ -10,7 +11,7 @@ abstract class Model {
   abstract boolean activity();
 
   @Nullable
-  abstract ImmutableList<String> greks();
+  abstract ImmutableList<Grek> greks();
 
   @Nullable
   abstract Throwable error();
@@ -26,7 +27,7 @@ abstract class Model {
 
     public abstract Builder activity(boolean activity);
 
-    public abstract Builder greks(ImmutableList<String> greks);
+    public abstract Builder greks(ImmutableList<Grek> greks);
 
     public abstract Builder error(Throwable error);
 
