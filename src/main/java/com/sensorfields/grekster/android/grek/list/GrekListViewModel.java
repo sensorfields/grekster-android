@@ -16,11 +16,11 @@ import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
 import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
+import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop;
 import com.spotify.mobius.MobiusLoop.Controller;
 import com.spotify.mobius.Next;
-import com.spotify.mobius.android.AndroidLogger;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
 import io.reactivex.ObservableTransformer;
@@ -32,7 +32,9 @@ public final class GrekListViewModel extends ViewModel {
 
   @Inject
   GrekListViewModel(
-      LoadGreksHandler loadGreksHandler, ShowGrekDetailsHandler showGrekDetailsHandler) {
+      LoggerFactory loggerFactory,
+      LoadGreksHandler loadGreksHandler,
+      ShowGrekDetailsHandler showGrekDetailsHandler) {
     MobiusLoop.Factory<Model, Event, Effect> factory =
         RxMobius.loop(
                 GrekListViewModel::update,
@@ -41,7 +43,7 @@ public final class GrekListViewModel extends ViewModel {
                     .add(ShowGrekDetails.class, showGrekDetailsHandler)
                     .build())
             .init(GrekListViewModel::init)
-            .logger(AndroidLogger.tag("Grek"));
+            .logger(loggerFactory.create(GrekListViewModel.class));
     controller = MobiusAndroid.controller(factory, Model.initial());
   }
 
