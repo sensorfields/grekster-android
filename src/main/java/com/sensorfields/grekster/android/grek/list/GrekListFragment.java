@@ -29,7 +29,6 @@ public final class GrekListFragment extends Fragment {
   private SwipeRefreshLayout swipeRefreshView;
   private GrekListAdapter listAdapter;
 
-  @SuppressWarnings("unchecked")
   private Observable<Event> connectViews(Observable<Model> models) {
     Disposable disposable =
         models.subscribe(
@@ -38,6 +37,7 @@ public final class GrekListFragment extends Fragment {
               listAdapter.setGreks(model.greks());
             });
 
+    //noinspection unchecked
     return Observable.mergeArray(
             refreshes(swipeRefreshView).map(ignored -> Event.swipeRefreshTriggered()),
             listAdapter.itemClicks().map(Event::grekClicked))

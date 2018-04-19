@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <!-- General -->
+  <string name="up">Back</string>
+
   <!-- Grek List-->
   <string name="grek_list_title">List</string>
+
+  <!-- Grek Details -->
+  <string name="grek_details_title">Details</string>
 
 </resources>

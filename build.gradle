@@ -65,6 +65,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:${rxbindingVersion}"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxbindingVersion}"
 
     implementation "com.spotify.mobius:mobius-core:${mobiusVersion}"
     implementation "com.spotify.mobius:mobius-extras:${mobiusVersion}"

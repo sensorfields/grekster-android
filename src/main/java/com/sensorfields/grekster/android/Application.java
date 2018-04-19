@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider.Factory;
 import android.content.Context;
 import android.os.StrictMode;
+import com.sensorfields.grekster.android.grek.details.GrekDetailsViewModel;
 import com.sensorfields.grekster.android.grek.list.GrekListViewModel;
 import com.sensorfields.grekster.android.utils.DaggerViewModelFactory;
 import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
@@ -75,5 +76,10 @@ public final class Application extends android.app.Application {
     @IntoMap
     @ClassKey(GrekListViewModel.class)
     abstract ViewModel grekListViewModel(GrekListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ClassKey(GrekDetailsViewModel.class)
+    abstract ViewModel grekDetailsViewModel(GrekDetailsViewModel viewModel);
   }
 }

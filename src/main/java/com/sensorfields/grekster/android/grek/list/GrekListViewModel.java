@@ -19,8 +19,8 @@ import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandle
 import com.sensorfields.grekster.android.model.Grek;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
-import com.spotify.mobius.MobiusLoop;
 import com.spotify.mobius.MobiusLoop.Controller;
+import com.spotify.mobius.MobiusLoop.Factory;
 import com.spotify.mobius.Next;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
@@ -36,7 +36,7 @@ public final class GrekListViewModel extends ViewModel {
       LoggerFactory loggerFactory,
       LoadGreksHandler loadGreksHandler,
       ShowGrekDetailsHandler showGrekDetailsHandler) {
-    MobiusLoop.Factory<Model, Event, Effect> factory =
+    Factory<Model, Event, Effect> factory =
         RxMobius.loop(
                 GrekListViewModel::update,
                 RxMobius.<Effect, Event>subtypeEffectHandler()
