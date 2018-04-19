@@ -5,6 +5,8 @@ import static com.spotify.mobius.Next.noChange;
 import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
 
 import android.arch.lifecycle.ViewModel;
+import com.sensorfields.grekster.android.utils.CyborgView;
+import com.sensorfields.grekster.android.utils.CyborgViewModel;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
 import com.spotify.mobius.MobiusLoop.Controller;
@@ -12,10 +14,10 @@ import com.spotify.mobius.MobiusLoop.Factory;
 import com.spotify.mobius.Next;
 import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
-import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
 import javax.inject.Inject;
 
-public final class GrekDetailsViewModel extends ViewModel {
+public final class GrekDetailsViewModel extends ViewModel implements CyborgViewModel<Model, Event> {
 
   private final Controller<Model, Event> controller;
 
@@ -30,12 +32,19 @@ public final class GrekDetailsViewModel extends ViewModel {
     controller = MobiusAndroid.controller(factory, Model.initial());
   }
 
-  void start(ObservableTransformer<Model, Event> view) {
-    controller.connect(fromTransformer(view));
+  @Override
+  public void connect(CyborgView<Model, Event> view) {
+    controller.connect(
+        fromTransformer(
+            upstream -> {
+              Disposable disposable = upstream.subscribe(view::render);
+              return view.events().doOnDispose(disposable::dispose);
+            }));
     controller.start();
   }
 
-  void stop() {
+  @Override
+  public void disconnect() {
     controller.stop();
     controller.disconnect();
   }

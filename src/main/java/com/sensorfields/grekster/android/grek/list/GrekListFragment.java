@@ -15,10 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.sensorfields.grekster.android.R;
+import com.sensorfields.grekster.android.utils.CyborgView;
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
-public final class GrekListFragment extends Fragment {
+public final class GrekListFragment extends Fragment implements CyborgView<Model, Event> {
 
   public static GrekListFragment create() {
     return new GrekListFragment();
@@ -29,19 +29,18 @@ public final class GrekListFragment extends Fragment {
   private SwipeRefreshLayout swipeRefreshView;
   private GrekListAdapter listAdapter;
 
-  private Observable<Event> connectViews(Observable<Model> models) {
-    Disposable disposable =
-        models.subscribe(
-            model -> {
-              swipeRefreshView.setRefreshing(model.activity());
-              listAdapter.setGreks(model.greks());
-            });
+  @Override
+  public void render(Model model) {
+    swipeRefreshView.setRefreshing(model.activity());
+    listAdapter.setGreks(model.greks());
+  }
 
-    //noinspection unchecked
+  @SuppressWarnings("unchecked")
+  @Override
+  public Observable<Event> events() {
     return Observable.mergeArray(
-            refreshes(swipeRefreshView).map(ignored -> Event.swipeRefreshTriggered()),
-            listAdapter.itemClicks().map(Event::grekClicked))
-        .doOnDispose(disposable::dispose);
+        refreshes(swipeRefreshView).map(ignored -> Event.swipeRefreshTriggered()),
+        listAdapter.itemClicks().map(Event::grekClicked));
   }
 
   @Override
@@ -57,14 +56,14 @@ public final class GrekListFragment extends Fragment {
 
     viewModel =
         ViewModelProviders.of(this, viewModelFactory(getContext())).get(GrekListViewModel.class);
-    viewModel.start(this::connectViews);
+    viewModel.connect(this);
 
     return view;
   }
 
   @Override
   public void onDestroyView() {
-    viewModel.stop();
+    viewModel.disconnect();
     super.onDestroyView();
   }
 }

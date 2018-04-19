@@ -16,11 +16,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.sensorfields.grekster.android.R;
 import com.sensorfields.grekster.android.model.Grek;
+import com.sensorfields.grekster.android.utils.CyborgView;
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
-public final class GrekDetailsFragment extends Fragment {
+public final class GrekDetailsFragment extends Fragment implements CyborgView<Model, Event> {
 
   public static GrekDetailsFragment create(Grek grek) {
     return new GrekDetailsFragment();
@@ -31,16 +31,15 @@ public final class GrekDetailsFragment extends Fragment {
   private Toolbar toolbarView;
   private TextView descriptionView;
 
-  private Observable<Event> connectViews(Observable<Model> models) {
-    Disposable disposable =
-        models.subscribe(
-            model -> {
-              Timber.e("MODEL: %s", model);
-            });
+  @Override
+  public void render(Model model) {
+    Timber.e("MODEL: %s", model);
+  }
 
-    //noinspection unchecked
-    return Observable.mergeArray(navigationClicks(toolbarView).map(ignored -> upClicked()))
-        .doOnDispose(disposable::dispose);
+  @SuppressWarnings("unchecked")
+  @Override
+  public Observable<Event> events() {
+    return Observable.mergeArray(navigationClicks(toolbarView).map(ignored -> upClicked()));
   }
 
   @Override
@@ -54,14 +53,14 @@ public final class GrekDetailsFragment extends Fragment {
 
     viewModel =
         ViewModelProviders.of(this, viewModelFactory(getContext())).get(GrekDetailsViewModel.class);
-    viewModel.start(this::connectViews);
+    viewModel.connect(this);
 
     return view;
   }
 
   @Override
   public void onDestroyView() {
-    viewModel.stop();
+    viewModel.disconnect();
     super.onDestroyView();
   }
 }
