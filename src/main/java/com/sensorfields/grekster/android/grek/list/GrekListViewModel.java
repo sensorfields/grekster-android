@@ -7,9 +7,7 @@ import static com.spotify.mobius.First.first;
 import static com.spotify.mobius.Next.dispatch;
 import static com.spotify.mobius.Next.next;
 import static com.spotify.mobius.Next.noChange;
-import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
 
-import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
@@ -17,54 +15,29 @@ import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
 import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.sensorfields.grekster.android.model.Grek;
-import com.sensorfields.grekster.android.utils.CyborgView;
-import com.sensorfields.grekster.android.utils.CyborgViewModel;
+import com.sensorfields.grekster.android.utils.BaseCyborgViewModel;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
-import com.spotify.mobius.MobiusLoop.Controller;
-import com.spotify.mobius.MobiusLoop.Factory;
 import com.spotify.mobius.Next;
-import com.spotify.mobius.android.MobiusAndroid;
 import com.spotify.mobius.rx2.RxMobius;
-import io.reactivex.disposables.Disposable;
 import javax.inject.Inject;
 
-public final class GrekListViewModel extends ViewModel implements CyborgViewModel<Model, Event> {
-
-  private final Controller<Model, Event> controller;
+public final class GrekListViewModel extends BaseCyborgViewModel<Model, Event, Effect> {
 
   @Inject
   GrekListViewModel(
       LoggerFactory loggerFactory,
       LoadGreksHandler loadGreksHandler,
       ShowGrekDetailsHandler showGrekDetailsHandler) {
-    Factory<Model, Event, Effect> factory =
-        RxMobius.loop(
-                GrekListViewModel::update,
-                RxMobius.<Effect, Event>subtypeEffectHandler()
-                    .add(LoadGreks.class, loadGreksHandler)
-                    .add(ShowGrekDetails.class, showGrekDetailsHandler)
-                    .build())
-            .init(GrekListViewModel::init)
-            .logger(loggerFactory.create(GrekListViewModel.class));
-    controller = MobiusAndroid.controller(factory, Model.initial());
-  }
-
-  @Override
-  public void connect(CyborgView<Model, Event> view) {
-    controller.connect(
-        fromTransformer(
-            upstream -> {
-              Disposable disposable = upstream.subscribe(view::render);
-              return view.events().doOnDispose(disposable::dispose);
-            }));
-    controller.start();
-  }
-
-  @Override
-  public void disconnect() {
-    controller.stop();
-    controller.disconnect();
+    super(
+        GrekListViewModel::update,
+        GrekListViewModel::init,
+        RxMobius.<Effect, Event>subtypeEffectHandler()
+            .add(LoadGreks.class, loadGreksHandler)
+            .add(ShowGrekDetails.class, showGrekDetailsHandler)
+            .build(),
+        Model.initial(),
+        loggerFactory);
   }
 
   static First<Model, Effect> init(Model model) {
