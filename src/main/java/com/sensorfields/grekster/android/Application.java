@@ -1,9 +1,9 @@
 package com.sensorfields.grekster.android;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider.Factory;
 import android.content.Context;
 import android.os.StrictMode;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider.Factory;
 import com.sensorfields.grekster.android.grek.details.GrekDetailsViewModel;
 import com.sensorfields.grekster.android.grek.list.GrekListViewModel;
 import com.sensorfields.grekster.android.utils.DaggerViewModelFactory;

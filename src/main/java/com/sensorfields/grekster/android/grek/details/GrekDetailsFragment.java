@@ -1,19 +1,19 @@
 package com.sensorfields.grekster.android.grek.details;
 
-import static com.jakewharton.rxbinding2.support.v7.widget.RxToolbar.navigationClicks;
+import static com.jakewharton.rxbinding3.androidx.appcompat.widget.RxToolbar.navigationClicks;
 import static com.sensorfields.grekster.android.Application.viewModelFactory;
 import static com.sensorfields.grekster.android.grek.details.Event.upClicked;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import com.sensorfields.grekster.android.R;
 import com.sensorfields.grekster.android.model.Grek;
 import com.sensorfields.grekster.android.utils.CyborgView;

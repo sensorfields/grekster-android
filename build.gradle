@@ -4,15 +4,21 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha14'
     }
 }
 
 apply plugin: 'com.android.application'
 
 ext {
-    androidSupportLibraryVersion = '27.1.1'
-    androidArchLifecycleVersion = '1.1.1'
+    androidxAnnotationVersion = '1.0.0-alpha1'
+    androidxFragmentVersion = '1.0.0-alpha1'
+    androidxAppcompatVersion = '1.0.0-alpha1'
+    androidxSwiperefreshlayoutVersion = '1.0.0-alpha1'
+    androidxRecyclerviewVersion = '1.0.0-alpha1'
+    androidxLifecycleVersion = '2.0.0-alpha1'
+    androidxCoordinatorlayoutVersion = '1.0.0-alpha1'
+    androidMaterialVersion = '1.0.0-alpha1'
     timberVersion = '4.7.0'
     guavaVersion = '24.1-android'
     rxjavaVersion = '2.1.12'
@@ -26,11 +32,11 @@ ext {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 'android-P'
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion 'P'
+        targetSdkVersion 'P'
 
         applicationId 'com.sensorfields.grekster'
         versionCode 1
@@ -49,14 +55,15 @@ repositories {
 }
 
 dependencies {
-    implementation "com.android.support:support-annotations:${androidSupportLibraryVersion}"
-    implementation "com.android.support:support-core-ui:${androidSupportLibraryVersion}"
-    implementation "com.android.support:appcompat-v7:${androidSupportLibraryVersion}"
-    implementation "com.android.support:design:${androidSupportLibraryVersion}"
-    implementation "com.android.support:design:${androidSupportLibraryVersion}"
-
-    implementation "android.arch.lifecycle:viewmodel:${androidArchLifecycleVersion}"
-    implementation "android.arch.lifecycle:extensions:${androidArchLifecycleVersion}"
+    implementation "androidx.annotation:annotation:${androidxAnnotationVersion}"
+    implementation "androidx.fragment:fragment:${androidxFragmentVersion}"
+    implementation "androidx.appcompat:appcompat:${androidxAppcompatVersion}"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${androidxSwiperefreshlayoutVersion}"
+    implementation "androidx.recyclerview:recyclerview:${androidxRecyclerviewVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:${androidxLifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${androidxLifecycleVersion}"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:${androidxCoordinatorlayoutVersion}"
+    implementation "com.google.android.material:material:${androidMaterialVersion}"
 
     implementation "com.jakewharton.timber:timber:${timberVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
@@ -64,8 +71,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:${rxjavaVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}"
-    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:${rxbindingVersion}"
-    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxbindingVersion}"
 
     implementation "com.spotify.mobius:mobius-core:${mobiusVersion}"
     implementation "com.spotify.mobius:mobius-extras:${mobiusVersion}"

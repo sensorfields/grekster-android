@@ -1,9 +1,10 @@
 package com.sensorfields.grekster.android.utils;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 @Singleton
 public final class FragmentManagerProvider {

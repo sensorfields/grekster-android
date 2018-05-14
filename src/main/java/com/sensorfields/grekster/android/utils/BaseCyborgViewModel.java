@@ -2,7 +2,7 @@ package com.sensorfields.grekster.android.utils;
 
 import static com.spotify.mobius.rx2.RxConnectables.fromTransformer;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 import com.spotify.mobius.Init;
 import com.spotify.mobius.MobiusLoop.Controller;
 import com.spotify.mobius.MobiusLoop.Factory;

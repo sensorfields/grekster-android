@@ -1,8 +1,8 @@
 package com.sensorfields.grekster.android.utils;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider.Factory;
 import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider.Factory;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
