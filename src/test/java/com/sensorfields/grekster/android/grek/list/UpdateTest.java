@@ -1,7 +1,9 @@
 package com.sensorfields.grekster.android.grek.list;
 
 import static com.sensorfields.grekster.android.grek.list.Effect.loadGreks;
+import static com.sensorfields.grekster.android.grek.list.Effect.showGrekCreate;
 import static com.sensorfields.grekster.android.grek.list.Effect.showGrekDetails;
+import static com.sensorfields.grekster.android.grek.list.Event.createButtonClicked;
 import static com.sensorfields.grekster.android.grek.list.Event.grekClicked;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoaded;
 import static com.sensorfields.grekster.android.grek.list.Event.greksLoadingFailed;
@@ -73,5 +75,13 @@ public final class UpdateTest {
 
     assertThat(next, hasNoModel());
     assertThat(next, hasNoEffects());
+  }
+
+  @Test
+  public void createButtonClickedEvent_noModel_showGrekCreateEffect() {
+    Next<Model, Effect> next = update(Model.initial(), createButtonClicked());
+
+    assertThat(next, hasNoModel());
+    assertThat(next, hasEffects(showGrekCreate()));
   }
 }

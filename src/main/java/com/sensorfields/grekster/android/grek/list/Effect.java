@@ -10,4 +10,6 @@ interface Effect_dataenum {
   dataenum_case LoadGreks();
 
   dataenum_case ShowGrekDetails(Grek grek);
+
+  dataenum_case ShowGrekCreate();
 }

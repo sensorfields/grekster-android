@@ -7,6 +7,7 @@
   <!-- Grek List-->
   <item name="grekListSwipeRefresh" type="id"/>
   <item name="grekList" type="id"/>
+  <item name="grekListCreateButton" type="id"/>
 
   <!-- Grek Details -->
   <item name="grekDetailsScroll" type="id"/>

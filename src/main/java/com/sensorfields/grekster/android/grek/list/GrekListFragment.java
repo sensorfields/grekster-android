@@ -1,5 +1,6 @@
 package com.sensorfields.grekster.android.grek.list;
 
+import static com.jakewharton.rxbinding2.view.RxView.clicks;
 import static com.jakewharton.rxbinding3.androidx.swiperefreshlayout.widget.RxSwipeRefreshLayout.refreshes;
 import static com.sensorfields.grekster.android.Application.viewModelFactory;
 
@@ -27,6 +28,7 @@ public final class GrekListFragment extends Fragment implements CyborgView<Model
 
   private SwipeRefreshLayout swipeRefreshView;
   private GrekListAdapter listAdapter;
+  private View createButton;
 
   private Disposable disposable;
 
@@ -41,7 +43,8 @@ public final class GrekListFragment extends Fragment implements CyborgView<Model
   public Observable<Event> events() {
     return Observable.mergeArray(
         refreshes(swipeRefreshView).map(ignored -> Event.swipeRefreshTriggered()),
-        listAdapter.itemClicks().map(Event::grekClicked));
+        listAdapter.itemClicks().map(Event::grekClicked),
+        clicks(createButton).map(ignored -> Event.createButtonClicked()));
   }
 
   @Override
@@ -54,6 +57,7 @@ public final class GrekListFragment extends Fragment implements CyborgView<Model
     RecyclerView listView = view.findViewById(R.id.grekList);
     listView.setLayoutManager(new LinearLayoutManager(getContext()));
     listView.setAdapter(listAdapter = new GrekListAdapter());
+    createButton = view.findViewById(R.id.grekListCreateButton);
 
     disposable =
         ViewModelProviders.of(this, viewModelFactory(getContext()))

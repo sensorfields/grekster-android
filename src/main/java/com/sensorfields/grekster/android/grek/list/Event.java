@@ -15,4 +15,6 @@ interface Event_dataenum {
   dataenum_case SwipeRefreshTriggered();
 
   dataenum_case GrekClicked(Grek grek);
+
+  dataenum_case CreateButtonClicked();
 }

@@ -1,6 +1,7 @@
 package com.sensorfields.grekster.android.grek.list;
 
 import static com.sensorfields.grekster.android.grek.list.Effect.loadGreks;
+import static com.sensorfields.grekster.android.grek.list.Effect.showGrekCreate;
 import static com.sensorfields.grekster.android.grek.list.Effect.showGrekDetails;
 import static com.spotify.mobius.Effects.effects;
 import static com.spotify.mobius.First.first;
@@ -12,8 +13,10 @@ import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
 import com.sensorfields.cyborg.CyborgViewModel;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
+import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekCreate;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
 import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
+import com.sensorfields.grekster.android.grek.list.handler.ShowGrekCreateHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.sensorfields.grekster.android.model.Grek;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
@@ -28,13 +31,15 @@ public final class GrekListViewModel extends CyborgViewModel<Model, Event, Effec
   GrekListViewModel(
       LoggerFactory loggerFactory,
       LoadGreksHandler loadGreksHandler,
-      ShowGrekDetailsHandler showGrekDetailsHandler) {
+      ShowGrekDetailsHandler showGrekDetailsHandler,
+      ShowGrekCreateHandler showGrekCreateHandler) {
     super(
         RxMobius.loop(
                 GrekListViewModel::update,
                 RxMobius.<Effect, Event>subtypeEffectHandler()
                     .add(LoadGreks.class, loadGreksHandler)
                     .add(ShowGrekDetails.class, showGrekDetailsHandler)
+                    .add(ShowGrekCreate.class, showGrekCreateHandler)
                     .build())
             .logger(loggerFactory.create(GrekListViewModel.class))
             .init(GrekListViewModel::init)
@@ -64,6 +69,7 @@ public final class GrekListViewModel extends CyborgViewModel<Model, Event, Effec
             return dispatch(effects(showGrekDetails(grek)));
           }
           return noChange();
-        });
+        },
+        createButtonClicked -> dispatch(effects(showGrekCreate())));
   }
 }

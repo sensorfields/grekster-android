@@ -13,7 +13,7 @@ import org.junit.Test;
 public final class InitTest {
 
   @Test
-  public void initialModelReturnsActivityTrueModelAndLoadGreksEvent() {
+  public void initialModelReturnsActivityTrueModelAndLoadGreksEffect() {
     Model model = Model.initial();
 
     First<Model, Effect> first = init(model);
