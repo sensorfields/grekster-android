@@ -14,9 +14,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.sensorfields.cyborg.CyborgView;
 import com.sensorfields.grekster.android.R;
-import com.sensorfields.grekster.android.utils.CyborgView;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 public final class GrekListFragment extends Fragment implements CyborgView<Model, Event> {
 
@@ -24,10 +25,10 @@ public final class GrekListFragment extends Fragment implements CyborgView<Model
     return new GrekListFragment();
   }
 
-  private GrekListViewModel viewModel;
-
   private SwipeRefreshLayout swipeRefreshView;
   private GrekListAdapter listAdapter;
+
+  private Disposable disposable;
 
   @Override
   public void render(Model model) {
@@ -54,16 +55,17 @@ public final class GrekListFragment extends Fragment implements CyborgView<Model
     listView.setLayoutManager(new LinearLayoutManager(getContext()));
     listView.setAdapter(listAdapter = new GrekListAdapter());
 
-    viewModel =
-        ViewModelProviders.of(this, viewModelFactory(getContext())).get(GrekListViewModel.class);
-    viewModel.connect(this);
+    disposable =
+        ViewModelProviders.of(this, viewModelFactory(getContext()))
+            .get(GrekListViewModel.class)
+            .connect(this);
 
     return view;
   }
 
   @Override
   public void onDestroyView() {
-    viewModel.disconnect();
+    disposable.dispose();
     super.onDestroyView();
   }
 }

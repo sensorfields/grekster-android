@@ -10,19 +10,19 @@ import static com.spotify.mobius.Next.noChange;
 
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
+import com.sensorfields.cyborg.CyborgViewModel;
 import com.sensorfields.grekster.android.grek.list.Effect.LoadGreks;
 import com.sensorfields.grekster.android.grek.list.Effect.ShowGrekDetails;
 import com.sensorfields.grekster.android.grek.list.handler.LoadGreksHandler;
 import com.sensorfields.grekster.android.grek.list.handler.ShowGrekDetailsHandler;
 import com.sensorfields.grekster.android.model.Grek;
-import com.sensorfields.grekster.android.utils.BaseCyborgViewModel;
 import com.sensorfields.grekster.android.utils.LoggerFactory;
 import com.spotify.mobius.First;
 import com.spotify.mobius.Next;
 import com.spotify.mobius.rx2.RxMobius;
 import javax.inject.Inject;
 
-public final class GrekListViewModel extends BaseCyborgViewModel<Model, Event, Effect> {
+public final class GrekListViewModel extends CyborgViewModel<Model, Event, Effect> {
 
   @Inject
   GrekListViewModel(
@@ -30,14 +30,15 @@ public final class GrekListViewModel extends BaseCyborgViewModel<Model, Event, E
       LoadGreksHandler loadGreksHandler,
       ShowGrekDetailsHandler showGrekDetailsHandler) {
     super(
-        GrekListViewModel::update,
-        GrekListViewModel::init,
-        RxMobius.<Effect, Event>subtypeEffectHandler()
-            .add(LoadGreks.class, loadGreksHandler)
-            .add(ShowGrekDetails.class, showGrekDetailsHandler)
-            .build(),
-        Model.initial(),
-        loggerFactory);
+        RxMobius.loop(
+                GrekListViewModel::update,
+                RxMobius.<Effect, Event>subtypeEffectHandler()
+                    .add(LoadGreks.class, loadGreksHandler)
+                    .add(ShowGrekDetails.class, showGrekDetailsHandler)
+                    .build())
+            .logger(loggerFactory.create(GrekListViewModel.class))
+            .init(GrekListViewModel::init)
+            .startFrom(Model.initial()));
   }
 
   static First<Model, Effect> init(Model model) {

@@ -14,10 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import com.sensorfields.cyborg.CyborgView;
 import com.sensorfields.grekster.android.R;
 import com.sensorfields.grekster.android.model.Grek;
-import com.sensorfields.grekster.android.utils.CyborgView;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 public final class GrekDetailsFragment extends Fragment implements CyborgView<Model, Event> {
@@ -26,10 +27,10 @@ public final class GrekDetailsFragment extends Fragment implements CyborgView<Mo
     return new GrekDetailsFragment();
   }
 
-  private GrekDetailsViewModel viewModel;
-
   private Toolbar toolbarView;
   private TextView descriptionView;
+
+  private Disposable disposable;
 
   @Override
   public void render(Model model) {
@@ -51,16 +52,17 @@ public final class GrekDetailsFragment extends Fragment implements CyborgView<Mo
     toolbarView = view.findViewById(R.id.toolbar);
     descriptionView = view.findViewById(R.id.grekDetailsDescription);
 
-    viewModel =
-        ViewModelProviders.of(this, viewModelFactory(getContext())).get(GrekDetailsViewModel.class);
-    viewModel.connect(this);
+    disposable =
+        ViewModelProviders.of(this, viewModelFactory(getContext()))
+            .get(GrekDetailsViewModel.class)
+            .connect(this);
 
     return view;
   }
 
   @Override
   public void onDestroyView() {
-    viewModel.disconnect();
+    disposable.dispose();
     super.onDestroyView();
   }
 }
