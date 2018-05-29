@@ -3,11 +3,19 @@
 
   <!-- General -->
   <string name="up">Back</string>
+  <string name="close">Close</string>
+  <string name="done">Done</string>
 
-  <!-- Grek List-->
-  <string name="grek_list_title">List</string>
+  <!-- Grek Create -->
+  <string name="grek_create_title">Create a Grek</string>
+  <string name="grek_create_photo_gallery">Choose a photo</string>
+  <string name="grek_create_photo_camera">Take a photo</string>
+  <string name="grek_create_message">Add a cool message for your Grek</string>
 
   <!-- Grek Details -->
   <string name="grek_details_title">Details</string>
+
+  <!-- Grek List-->
+  <string name="grek_list_title">List</string>
 
 </resources>

@@ -4,13 +4,16 @@
   <!-- General -->
   <item name="toolbar" type="id"/>
 
-  <!-- Grek List-->
-  <item name="grekListSwipeRefresh" type="id"/>
-  <item name="grekList" type="id"/>
-  <item name="grekListCreateButton" type="id"/>
+  <!-- Grek Create -->
+  <item name="grekCreateDoneButton" type="id"/>
 
   <!-- Grek Details -->
   <item name="grekDetailsScroll" type="id"/>
   <item name="grekDetailsDescription" type="id"/>
+
+  <!-- Grek List-->
+  <item name="grekListSwipeRefresh" type="id"/>
+  <item name="grekList" type="id"/>
+  <item name="grekListCreateButton" type="id"/>
 
 </resources>
