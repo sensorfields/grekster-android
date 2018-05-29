@@ -35,19 +35,19 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:contentDescription="@string/grek_create_photo_gallery"
-          android:src="@drawable/ic_image"/>
+          android:text="@string/grek_create_photo_gallery"
+          app:icon="@drawable/ic_image"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:contentDescription="@string/grek_create_photo_camera"
-          android:src="@drawable/ic_camera"/>
+          android:text="@string/grek_create_photo_camera"
+          app:icon="@drawable/ic_camera"/>
 
       </LinearLayout>
 
