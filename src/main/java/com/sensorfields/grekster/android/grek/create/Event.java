@@ -7,4 +7,8 @@ import com.spotify.dataenum.dataenum_case;
 interface Event_dataenum {
 
   dataenum_case UpButtonClicked();
+
+  dataenum_case PhotoCameraButtonClicked();
+
+  dataenum_case PhotosReceived();
 }

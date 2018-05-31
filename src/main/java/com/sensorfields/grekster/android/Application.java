@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider.Factory;
+import com.sensorfields.cyborg.ActivityService;
 import com.sensorfields.grekster.android.grek.create.GrekCreateViewModel;
 import com.sensorfields.grekster.android.grek.details.GrekDetailsViewModel;
 import com.sensorfields.grekster.android.grek.list.GrekListViewModel;
@@ -62,6 +63,8 @@ public final class Application extends android.app.Application {
   public interface Component {
 
     FragmentManagerProvider fragmentManagerProvider();
+
+    ActivityService activityService();
 
     Factory viewModelFactory();
   }

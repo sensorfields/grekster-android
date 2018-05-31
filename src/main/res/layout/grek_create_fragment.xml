@@ -38,12 +38,14 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
+          android:id="@id/grekCreatePhotoGalleryButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/grek_create_photo_gallery"
           app:icon="@drawable/ic_image"/>
 
         <com.google.android.material.button.MaterialButton
+          android:id="@id/grekCreatePhotoCameraButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/grek_create_photo_camera"

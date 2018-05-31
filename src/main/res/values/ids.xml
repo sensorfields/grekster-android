@@ -5,6 +5,8 @@
   <item name="toolbar" type="id"/>
 
   <!-- Grek Create -->
+  <item name="grekCreatePhotoGalleryButton" type="id"/>
+  <item name="grekCreatePhotoCameraButton" type="id"/>
   <item name="grekCreateDoneButton" type="id"/>
 
   <!-- Grek Details -->

@@ -7,4 +7,6 @@ import com.spotify.dataenum.dataenum_case;
 interface Effect_dataenum {
 
   dataenum_case NavigateUp();
+
+  dataenum_case GetPhotoFromCamera();
 }

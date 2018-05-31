@@ -1,7 +1,10 @@
 package com.sensorfields.grekster.android.grek.create;
 
+import static com.jakewharton.rxbinding2.view.RxView.clicks;
 import static com.jakewharton.rxbinding3.androidx.appcompat.widget.RxToolbar.navigationClicks;
 import static com.sensorfields.grekster.android.Application.viewModelFactory;
+import static com.sensorfields.grekster.android.grek.create.Event.photoCameraButtonClicked;
+import static com.sensorfields.grekster.android.grek.create.Event.upButtonClicked;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +27,7 @@ public final class GrekCreateFragment extends Fragment implements CyborgView<Mod
   }
 
   private Toolbar toolbarView;
+  private View photoCameraButton;
 
   private Disposable disposable;
 
@@ -32,7 +36,9 @@ public final class GrekCreateFragment extends Fragment implements CyborgView<Mod
 
   @Override
   public Observable<Event> events() {
-    return navigationClicks(toolbarView).map(ignored -> Event.upButtonClicked());
+    return Observable.merge(
+        navigationClicks(toolbarView).map(ignored -> upButtonClicked()),
+        clicks(photoCameraButton).map(ignored -> photoCameraButtonClicked()));
   }
 
   @Override
@@ -43,6 +49,7 @@ public final class GrekCreateFragment extends Fragment implements CyborgView<Mod
     View view = inflater.inflate(R.layout.grek_create_fragment, container, false);
     toolbarView = view.findViewById(R.id.toolbar);
     toolbarView.inflateMenu(R.menu.grek_create_toolbar);
+    photoCameraButton = view.findViewById(R.id.grekCreatePhotoCameraButton);
 
     disposable =
         ViewModelProviders.of(this, viewModelFactory(getContext()))

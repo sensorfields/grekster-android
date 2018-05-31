@@ -1,5 +1,8 @@
 package com.sensorfields.grekster.android.grek.create;
 
+import static com.sensorfields.grekster.android.grek.create.Effect.getPhotoFromCamera;
+import static com.sensorfields.grekster.android.grek.create.Effect.navigateUp;
+import static com.sensorfields.grekster.android.grek.create.Event.photoCameraButtonClicked;
 import static com.sensorfields.grekster.android.grek.create.Event.upButtonClicked;
 import static com.sensorfields.grekster.android.grek.create.GrekCreateViewModel.update;
 import static com.spotify.mobius.test.NextMatchers.hasEffects;
@@ -16,6 +19,14 @@ public final class UpdateTest {
     Next<Model, Effect> next = update(Model.initial(), upButtonClicked());
 
     assertThat(next, hasNoModel());
-    assertThat(next, hasEffects(Effect.navigateUp()));
+    assertThat(next, hasEffects(navigateUp()));
+  }
+
+  @Test
+  public void photoCameraButtonClickedEvent_returns_noModel_getPhotoFromCameraEffect() {
+    Next<Model, Effect> next = update(Model.initial(), photoCameraButtonClicked());
+
+    assertThat(next, hasNoModel());
+    assertThat(next, hasEffects(getPhotoFromCamera()));
   }
 }
