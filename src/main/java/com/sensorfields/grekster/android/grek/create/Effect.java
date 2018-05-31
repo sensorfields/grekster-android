@@ -9,4 +9,6 @@ interface Effect_dataenum {
   dataenum_case NavigateUp();
 
   dataenum_case GetPhotoFromCamera();
+
+  dataenum_case GetPhotoFromGallery();
 }

@@ -10,5 +10,7 @@ interface Event_dataenum {
 
   dataenum_case PhotoCameraButtonClicked();
 
+  dataenum_case PhotoGalleryButtonClicked();
+
   dataenum_case PhotosReceived();
 }
