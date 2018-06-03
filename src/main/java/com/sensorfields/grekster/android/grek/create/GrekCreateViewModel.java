@@ -5,7 +5,7 @@ import static com.sensorfields.grekster.android.grek.create.Effect.getPhotoFromG
 import static com.sensorfields.grekster.android.grek.create.Effect.navigateUp;
 import static com.spotify.mobius.Effects.effects;
 import static com.spotify.mobius.Next.dispatch;
-import static com.spotify.mobius.Next.noChange;
+import static com.spotify.mobius.Next.next;
 
 import android.support.annotation.NonNull;
 import com.sensorfields.cyborg.CyborgViewModel;
@@ -20,9 +20,7 @@ import com.spotify.mobius.Next;
 import com.spotify.mobius.rx2.RxMobius;
 import javax.inject.Inject;
 
-/**
- * TODO Effect handlers should be provided with map method to ensure compile-time validation.
- */
+/** TODO Effect handlers should be provided with map method to ensure compile-time validation. */
 public final class GrekCreateViewModel extends CyborgViewModel<Model, Event, Effect> {
 
   @Inject
@@ -49,6 +47,6 @@ public final class GrekCreateViewModel extends CyborgViewModel<Model, Event, Eff
         upButtonClicked -> dispatch(effects(navigateUp())),
         photoCameraButtonClicked -> dispatch(effects(getPhotoFromCamera())),
         photoGalleryButtonClicked -> dispatch(effects(getPhotoFromGallery())),
-        photosReceived -> noChange());
+        photoReceived -> next(model.toBuilder().photo(photoReceived.file()).build()));
   }
 }

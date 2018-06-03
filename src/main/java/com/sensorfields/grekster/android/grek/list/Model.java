@@ -18,7 +18,7 @@ abstract class Model {
 
   abstract Builder toBuilder();
 
-  public static Model initial() {
+  static Model initial() {
     return new AutoValue_Model.Builder().activity(false).build();
   }
 

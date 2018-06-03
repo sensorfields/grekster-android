@@ -5,13 +5,17 @@ import static com.sensorfields.grekster.android.grek.create.Effect.getPhotoFromG
 import static com.sensorfields.grekster.android.grek.create.Effect.navigateUp;
 import static com.sensorfields.grekster.android.grek.create.Event.photoCameraButtonClicked;
 import static com.sensorfields.grekster.android.grek.create.Event.photoGalleryButtonClicked;
+import static com.sensorfields.grekster.android.grek.create.Event.photoReceived;
 import static com.sensorfields.grekster.android.grek.create.Event.upButtonClicked;
 import static com.sensorfields.grekster.android.grek.create.GrekCreateViewModel.update;
 import static com.spotify.mobius.test.NextMatchers.hasEffects;
+import static com.spotify.mobius.test.NextMatchers.hasModel;
+import static com.spotify.mobius.test.NextMatchers.hasNoEffects;
 import static com.spotify.mobius.test.NextMatchers.hasNoModel;
 import static org.junit.Assert.assertThat;
 
 import com.spotify.mobius.Next;
+import java.io.File;
 import org.junit.Test;
 
 public final class UpdateTest {
@@ -38,5 +42,14 @@ public final class UpdateTest {
 
     assertThat(next, hasNoModel());
     assertThat(next, hasEffects(getPhotoFromGallery()));
+  }
+
+  @Test
+  public void photoReceivedEvent_returns_modelWithPhoto_noEffects() {
+    File photoFile = new File("photo.jpeg");
+    Next<Model, Effect> next = update(Model.initial(), photoReceived(photoFile));
+
+    assertThat(next, hasModel(Model.initial().toBuilder().photo(photoFile).build()));
+    assertThat(next, hasNoEffects());
   }
 }

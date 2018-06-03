@@ -7,6 +7,7 @@ import static com.sensorfields.grekster.android.grek.create.Event.photoCameraBut
 import static com.sensorfields.grekster.android.grek.create.Event.photoGalleryButtonClicked;
 import static com.sensorfields.grekster.android.grek.create.Event.upButtonClicked;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.sensorfields.cyborg.CyborgView;
 import com.sensorfields.grekster.android.R;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import java.io.File;
 
 public final class GrekCreateFragment extends Fragment implements CyborgView<Model, Event> {
 
@@ -28,13 +30,22 @@ public final class GrekCreateFragment extends Fragment implements CyborgView<Mod
   }
 
   private Toolbar toolbarView;
+  private View photoView;
   private View photoGalleryButton;
   private View photoCameraButton;
 
   private Disposable disposable;
 
   @Override
-  public void render(Model model) {}
+  public void render(Model model) {
+    File photo = model.photo();
+    if (photo == null) {
+      photoView.setBackgroundResource(0);
+    } else {
+      BitmapDrawable photoDrawable = new BitmapDrawable(getResources(), photo.getAbsolutePath());
+      photoView.setBackground(photoDrawable);
+    }
+  }
 
   @Override
   public Observable<Event> events() {
@@ -52,6 +63,7 @@ public final class GrekCreateFragment extends Fragment implements CyborgView<Mod
     View view = inflater.inflate(R.layout.grek_create_fragment, container, false);
     toolbarView = view.findViewById(R.id.toolbar);
     toolbarView.inflateMenu(R.menu.grek_create_toolbar);
+    photoView = view.findViewById(R.id.grekCreatePhoto);
     photoGalleryButton = view.findViewById(R.id.grekCreatePhotoGalleryButton);
     photoCameraButton = view.findViewById(R.id.grekCreatePhotoCameraButton);
 

@@ -1,5 +1,6 @@
 package com.sensorfields.grekster.android;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.StrictMode;
 import androidx.lifecycle.ViewModel;
@@ -11,8 +12,12 @@ import com.sensorfields.grekster.android.grek.list.GrekListViewModel;
 import com.sensorfields.grekster.android.utils.DaggerViewModelFactory;
 import com.sensorfields.grekster.android.utils.FragmentManagerProvider;
 import dagger.Binds;
+import dagger.BindsInstance;
+import dagger.Module;
+import dagger.Provides;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
+import java.io.File;
 import javax.inject.Singleton;
 import timber.log.Timber;
 
@@ -47,7 +52,7 @@ public final class Application extends android.app.Application {
   private Component component;
 
   private void setupDagger() {
-    component = DaggerApplication_Component.create();
+    component = DaggerApplication_Component.builder().context(this).build();
   }
 
   public static Component component(Context context) {
@@ -59,7 +64,7 @@ public final class Application extends android.app.Application {
   }
 
   @Singleton
-  @dagger.Component(modules = Module.class)
+  @dagger.Component(modules = {AndroidModule.class, ApplicationModule.class})
   public interface Component {
 
     FragmentManagerProvider fragmentManagerProvider();
@@ -67,11 +72,39 @@ public final class Application extends android.app.Application {
     ActivityService activityService();
 
     Factory viewModelFactory();
+
+    @dagger.Component.Builder
+    interface Builder {
+
+      @BindsInstance
+      Builder context(Context context);
+
+      Component build();
+    }
+  }
+
+  @Module
+  abstract static class AndroidModule {
+
+    @Provides
+    static ContentResolver contentResolver(Context context) {
+      return context.getContentResolver();
+    }
+
+    @Provides
+    static String fileProviderAuthority(Context context) {
+      return context.getString(R.string.file_provider_authority);
+    }
+
+    @Provides
+    static File cacheDirectory(Context context) {
+      return context.getCacheDir();
+    }
   }
 
   @SuppressWarnings("unused")
-  @dagger.Module
-  abstract static class Module {
+  @Module
+  abstract static class ApplicationModule {
 
     @Binds
     abstract Factory viewModelFactory(DaggerViewModelFactory daggerViewModelFactory);

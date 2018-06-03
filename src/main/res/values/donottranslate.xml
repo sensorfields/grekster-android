@@ -3,4 +3,6 @@
 
   <string name="application_label">Grekster</string>
 
+  <string name="file_provider_authority">com.sensorfields.grekster.fileprovider</string>
+
 </resources>
