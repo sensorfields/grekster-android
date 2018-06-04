@@ -14,6 +14,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -52,6 +54,8 @@ public final class GetPhotoFromCameraHandler
                     data ->
                         data.second != null && data.second.getResultCode() == Activity.RESULT_OK)
                 .map(data -> photoReceived(data.first))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .toObservable());
   }
 }

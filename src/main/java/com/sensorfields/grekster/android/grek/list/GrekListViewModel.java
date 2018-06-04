@@ -34,16 +34,14 @@ public final class GrekListViewModel extends CyborgViewModel<Model, Event, Effec
       ShowGrekDetailsHandler showGrekDetailsHandler,
       ShowGrekCreateHandler showGrekCreateHandler) {
     super(
-        RxMobius.loop(
-                GrekListViewModel::update,
-                RxMobius.<Effect, Event>subtypeEffectHandler()
-                    .add(LoadGreks.class, loadGreksHandler)
-                    .add(ShowGrekDetails.class, showGrekDetailsHandler)
-                    .add(ShowGrekCreate.class, showGrekCreateHandler)
-                    .build())
-            .logger(loggerFactory.create(GrekListViewModel.class))
-            .init(GrekListViewModel::init)
-            .startFrom(Model.initial()));
+        loggerFactory,
+        GrekListViewModel::update,
+        RxMobius.<Effect, Event>subtypeEffectHandler()
+            .add(LoadGreks.class, loadGreksHandler)
+            .add(ShowGrekDetails.class, showGrekDetailsHandler)
+            .add(ShowGrekCreate.class, showGrekCreateHandler)
+            .build(),
+        Model.initial());
   }
 
   static First<Model, Effect> init(Model model) {

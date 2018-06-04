@@ -30,15 +30,14 @@ public final class GrekCreateViewModel extends CyborgViewModel<Model, Event, Eff
       GetPhotoFromGalleryHandler getPhotoFromGalleryHandler,
       GetPhotoFromCameraHandler getPhotoFromCameraHandler) {
     super(
-        RxMobius.loop(
-                GrekCreateViewModel::update,
-                RxMobius.<Effect, Event>subtypeEffectHandler()
-                    .add(NavigateUp.class, navigateUpHandler)
-                    .add(GetPhotoFromGallery.class, getPhotoFromGalleryHandler)
-                    .add(GetPhotoFromCamera.class, getPhotoFromCameraHandler)
-                    .build())
-            .logger(loggerFactory.create(GrekCreateViewModel.class))
-            .startFrom(Model.initial()));
+        loggerFactory,
+        GrekCreateViewModel::update,
+        RxMobius.<Effect, Event>subtypeEffectHandler()
+            .add(NavigateUp.class, navigateUpHandler)
+            .add(GetPhotoFromGallery.class, getPhotoFromGalleryHandler)
+            .add(GetPhotoFromCamera.class, getPhotoFromCameraHandler)
+            .build(),
+        Model.initial());
   }
 
   @NonNull

@@ -14,6 +14,8 @@ import com.sensorfields.grekster.android.grek.create.Event;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -48,6 +50,7 @@ public final class GetPhotoFromGalleryHandler
                             .addCategory(Intent.CATEGORY_OPENABLE),
                         null),
                     null)
+                .observeOn(Schedulers.io())
                 .filter(
                     activityResult ->
                         activityResult.getResultCode() == Activity.RESULT_OK
@@ -71,6 +74,7 @@ public final class GetPhotoFromGalleryHandler
                       return file;
                     })
                 .map(Event::photoReceived)
+                .observeOn(AndroidSchedulers.mainThread())
                 .toObservable());
   }
 }

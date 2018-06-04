@@ -13,11 +13,10 @@ public final class GrekDetailsViewModel extends CyborgViewModel<Model, Event, Ef
   @Inject
   GrekDetailsViewModel(LoggerFactory loggerFactory) {
     super(
-        RxMobius.loop(
-                GrekDetailsViewModel::update,
-                RxMobius.<Effect, Event>subtypeEffectHandler().build())
-            .logger(loggerFactory.create(GrekDetailsViewModel.class))
-            .startFrom(Model.initial()));
+        loggerFactory,
+        GrekDetailsViewModel::update,
+        RxMobius.<Effect, Event>subtypeEffectHandler().build(),
+        Model.initial());
   }
 
   static Next<Model, Effect> update(Model model, Event event) {
