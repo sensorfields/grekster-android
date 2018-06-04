@@ -17,7 +17,6 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
-import java.io.File;
 import javax.inject.Singleton;
 import timber.log.Timber;
 
@@ -94,11 +93,6 @@ public final class Application extends android.app.Application {
     @Provides
     static String fileProviderAuthority(Context context) {
       return context.getString(R.string.file_provider_authority);
-    }
-
-    @Provides
-    static File cacheDirectory(Context context) {
-      return context.getCacheDir();
     }
   }
 

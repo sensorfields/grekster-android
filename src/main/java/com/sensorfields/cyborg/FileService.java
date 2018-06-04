@@ -12,17 +12,15 @@ public final class FileService {
 
   private final Context context;
   private final String fileProviderAuthority;
-  private final File cacheDirectory;
 
   @Inject
-  FileService(Context context, String fileProviderAuthority, File cacheDirectory) {
+  FileService(Context context, String fileProviderAuthority) {
     this.context = context;
     this.fileProviderAuthority = fileProviderAuthority;
-    this.cacheDirectory = cacheDirectory;
   }
 
   public File cacheFile(String name) {
-    return new File(cacheDirectory, name);
+    return new File(context.getCacheDir(), name);
   }
 
   public Uri getUriForFile(File file) {
